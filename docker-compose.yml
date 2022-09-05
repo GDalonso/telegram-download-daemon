@@ -5,14 +5,15 @@ services:
     #build: .
     image: alfem/telegram-download-daemon:latest
     environment:
-      TELEGRAM_DAEMON_API_ID: "YOUR API ID HERE"
-      TELEGRAM_DAEMON_API_HASH: "YOUR API HASH HERE"
-      TELEGRAM_DAEMON_CHANNEL: "YOUR CHANNEL ID HERE"
-      TELEGRAM_DAEMON_DEST: "/downloads"
-      TELEGRAM_DAEMON_SESSION_PATH: "/session"
+      TELEGRAM_DAEMON_API_ID: $TELEGRAM_DAEMON_API_ID
+      TELEGRAM_DAEMON_API_HASH: $TELEGRAM_DAEMON_API_HASH
+      TELEGRAM_DAEMON_CHANNEL: $TELEGRAM_DAEMON_CHANNEL
+      TELEGRAM_DAEMON_SESSION_PATH: "/newsession"
+      TELEGRAM_DAEMON_DUPLICATES: ignore
     volumes:
        - downloads:/downloads
-       - sessions:/session
+       - sessions:/newsession
+       - /media/pi/120GBNAS/nas/telegram:/telegram-downloads
     restart: unless-stopped
 
 volumes:
