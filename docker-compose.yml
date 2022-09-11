@@ -1,5 +1,12 @@
 version: '3.5'
 
+# First startup gotta do
+# docker-compose run --rm telegram-download-daemon
+# login with +5511phonenumber
+# stop
+# docker-compose run --rm telegram-download-daemon-public
+# same login
+
 services:
   telegram-download-daemon:
     #build: .
