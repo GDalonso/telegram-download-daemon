@@ -20,7 +20,7 @@ services:
     volumes:
        - downloads:/downloads
        - sessions:/newsession
-       - /media/pi/120GBNAS/nas/telegram:/telegram-downloads
+       - /media/pi/480GB/telegram:/telegram-downloads
     restart: unless-stopped
 
   telegram-download-daemon-public:
@@ -35,7 +35,7 @@ services:
     volumes:
        - downloads_public:/downloads
        - sessions_public:/newsession
-       - /media/pi/120GBNAS/nas/public:/telegram-downloads
+       - /media/pi/480GB/public:/telegram-downloads
     restart: unless-stopped
 
 volumes:
