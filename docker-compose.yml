@@ -26,7 +26,7 @@ services:
     volumes:
        - downloads_public:/downloads
        - sessions_public:/newsession
-       - /home/thinkcentre/4tb/Public/TelegramDownloads:/telegram-downloads
+       - ${DOWNLOAD_PATH}:/telegram-downloads
     restart: unless-stopped
 
 volumes:
