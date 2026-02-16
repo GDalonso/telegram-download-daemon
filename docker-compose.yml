@@ -1,38 +1,21 @@
 version: '3.5'
 
 # First startup instructions:
-# docker-compose run --rm telegram-download-daemon-public
-# login with your phone number (e.g., +5511phonenumber)
-# After successful login, press Ctrl+C to stop
-# Then start normally with: docker-compose up -d
+# 1. Copy .env.example to .env and fill in your credentials
+# 2. docker-compose run --rm telegram-download-daemon-public
+# 3. login with your phone number (e.g., +5511phonenumber)
+# 4. After successful login, press Ctrl+C to stop
+# 5. Then start normally with: docker-compose up -d
 
 services:
-  # Private channel service (currently disabled)
-  # To enable: uncomment this service and configure TELEGRAM_DAEMON_CHANNEL in .envrc
-  # telegram-download-daemon:
-  #   build: .
-  #   #image: alfem/telegram-download-daemon:latest
-  #   container_name: telegram-download-private
-  #   read_only: true
-  #   environment:
-  #     TELEGRAM_DAEMON_API_ID: $TELEGRAM_DAEMON_API_ID
-  #     TELEGRAM_DAEMON_API_HASH: $TELEGRAM_DAEMON_API_HASH
-  #     TELEGRAM_DAEMON_CHANNEL: $TELEGRAM_DAEMON_CHANNEL
-  #     TELEGRAM_DAEMON_SESSION_PATH: "/newsession"
-  #     TELEGRAM_DAEMON_DUPLICATES: rename
-  #     #TELEGRAM_DAEMON_WORKERS: 2
-  #   volumes:
-  #      - downloads:/downloads
-  #      - sessions:/newsession
-  #      - /home/thinkcentre/rpinasdisk/telegram:/telegram-downloads
-  #   restart: unless-stopped
-
   # Public channel service (active)
   telegram-download-daemon-public:
     build: .
     #image: alfem/telegram-download-daemon:latest
     container_name: telegram-download-public
     read_only: true
+    env_file:
+      - .env
     environment:
       TELEGRAM_DAEMON_API_ID: $TELEGRAM_DAEMON_API_ID
       TELEGRAM_DAEMON_API_HASH: $TELEGRAM_DAEMON_API_HASH
