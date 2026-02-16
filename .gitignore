@@ -1,6 +1,7 @@
 .vscode
 .venv
 .env
+.envrc
 
 *.session
 

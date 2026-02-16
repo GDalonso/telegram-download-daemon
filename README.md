@@ -1,11 +1,11 @@
 # telegram-download-daemon
 
-A Telegram Daemon (not a bot) for file downloading automation 
+A Telegram Daemon (not a bot) for file downloading automation [for channels of which you have admin privileges](https://github.com/alfem/telegram-download-daemon/issues/48).
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E03K0RP)
 
 If you have got an Internet connected computer or NAS and you want to automate file downloading from Telegram channels, this
-daemon is for you. 
+daemon is for you.
 
 Telegram bots are limited to 20Mb file size downloads. So I wrote this agent
 or daemon to allow bigger downloads (limited to 2GB by Telegram APIs).
@@ -37,6 +37,7 @@ You need to configure these values:
 | `TELEGRAM_DAEMON_TEMP`     | `--temp`                | Destination path for temporary (download in progress) files                       | use --dest |
 | `TELEGRAM_DAEMON_CHANNEL`  | `--channel`             | Channel id to download from it (Please, check [Issue 45](https://github.com/alfem/telegram-download-daemon/issues/45), [Issue 48](https://github.com/alfem/telegram-download-daemon/issues/48) and [Issue 73](https://github.com/alfem/telegram-download-daemon/issues/73))                              |                     |
 | `TELEGRAM_DAEMON_DUPLICATES`  | `--duplicates`             | What to do with duplicated files: ignore, overwrite or rename them | rename                     |
+| `TELEGRAM_DAEMON_WORKERS`  | `--workers`             | Number of simultaneous downloads | Equals to processor cores                     |
 
 You can define them as Environment Variables, or put them as a command line arguments, for example:
 
@@ -50,6 +51,8 @@ You can also 'talk' to this daemon using your Telegram client:
 * Say "list" and get a list of available files in the destination path.
 * Say "status" to the daemon to check the current status.
 * Say "clean" to remove stale (*.tdd) files from temporary directory.
+* Say "queue" to list the pending files waiting to start.
+
 
 
 # Docker

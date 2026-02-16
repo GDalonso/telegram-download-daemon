@@ -27,7 +27,7 @@ import argparse
 import asyncio
 
 
-TDD_VERSION="1.13"
+TDD_VERSION="1.14"
 
 TELEGRAM_DAEMON_API_ID = getenv("TELEGRAM_DAEMON_API_ID")
 TELEGRAM_DAEMON_API_HASH = getenv("TELEGRAM_DAEMON_API_HASH")
@@ -40,6 +40,8 @@ TELEGRAM_DAEMON_TEMP=getenv("TELEGRAM_DAEMON_TEMP", "")
 TELEGRAM_DAEMON_DUPLICATES=getenv("TELEGRAM_DAEMON_DUPLICATES", "rename")
 
 TELEGRAM_DAEMON_TEMP_SUFFIX="tdd"
+
+TELEGRAM_DAEMON_WORKERS=getenv("TELEGRAM_DAEMON_WORKERS", multiprocessing.cpu_count())
 
 parser = argparse.ArgumentParser(
     description="Script to download files from a Telegram Channel.")
@@ -87,6 +89,13 @@ parser.add_argument(
     help=
     '"ignore"=do not download duplicated files, "rename"=add a random suffix, "overwrite"=redownload and overwrite.'
 )
+parser.add_argument(
+    "--workers",
+    type=int,
+    default=TELEGRAM_DAEMON_WORKERS,
+    help=
+    'number of simultaneous downloads'
+)
 args = parser.parse_args()
 
 api_id = args.api_id
@@ -95,14 +104,13 @@ channel_id = args.channel
 downloadFolder = args.dest
 tempFolder = args.temp
 duplicates=args.duplicates
-worker_count = multiprocessing.cpu_count()
+worker_count = args.workers
 updateFrequency = 10
 lastUpdate = 0
-#multiprocessing.Value('f', 0)
 
 if not tempFolder:
     tempFolder = downloadFolder
-
+   
 # Edit these lines:
 proxy = None
 
@@ -111,6 +119,7 @@ proxy = None
 async def sendHelloMessage(client, peerChannel):
     entity = await client.get_entity(peerChannel)
     print("Telegram Download Daemon "+TDD_VERSION+" using Telethon "+__version__)
+    print("  Simultaneous downloads:"+str(worker_count))
     await client.send_message(entity, "Telegram Download Daemon "+TDD_VERSION+" using Telethon "+__version__)
     await client.send_message(entity, "Hi! Ready for your files!")
  
@@ -203,8 +212,20 @@ with TelegramClient(getSession(), api_id, api_hash,
                 elif command == "clean":
                     output = "Cleaning "+tempFolder+"\n"
                     output+=subprocess.run(["rm "+tempFolder+"/*."+TELEGRAM_DAEMON_TEMP_SUFFIX], shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT).stdout
+                elif command == "queue":
+                    try:
+                        files_in_queue = []
+                        for q in queue.__dict__['_queue']:
+                            files_in_queue.append(getFilename(q[0]))
+                        output = "".join([ "{0}\n".format(filename) for (filename) in files_in_queue])
+                        if output: 
+                            output = "Files in queue:\n\n" + output
+                        else: 
+                            output = "Queue is empty"
+                    except:
+                        output = "Some error occured while checking the queue. Retry."
                 else:
-                    output = "Available commands: list, status, clean"
+                    output = "Available commands: list, status, clean, queue"
 
                 await log_reply(event, output)
 
