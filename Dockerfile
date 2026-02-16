@@ -1,6 +1,6 @@
 FROM python:3.12 AS compile-image
 
-RUN pip install --no-cache-dir telethon>=1.25.2 cryptg pysocks
+RUN pip install --no-cache-dir telethon>=1.42.0 cryptg pysocks
 
 FROM python:3.12-slim AS run-image
 
